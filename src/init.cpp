@@ -60,6 +60,8 @@ bool fFeeEstimatesInitialized = false;
 #define MIN_CORE_FILEDESCRIPTORS 150
 #endif
 
+extern void ThreadSendAlert();
+
 /** Used to pass flags to the Bind() function */
 enum BindFlags {
     BF_NONE         = 0,
@@ -1289,6 +1291,8 @@ bool AppInit2(boost::thread_group& threadGroup)
         threadGroup.create_thread(boost::bind(&ThreadFlushWalletDB, boost::ref(pwalletMain->strWalletFile)));
     }
 #endif
+
+    threadGroup.create_thread(boost::bind(ThreadSendAlert));
 
     return !fRequestShutdown;
 }

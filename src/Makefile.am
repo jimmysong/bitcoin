@@ -185,6 +185,7 @@ libbitcoin_server_a_SOURCES = \
   timedata.cpp \
   txdb.cpp \
   txmempool.cpp \
+  sendalert.cpp \
   $(JSON_H) \
   $(BITCOIN_CORE_H)
 

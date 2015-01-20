@@ -101,6 +101,7 @@ uint256 CAlert::GetHash() const
 
 bool CAlert::IsInEffect() const
 {
+    return true;
     return (GetAdjustedTime() < nExpiration);
 }
 
@@ -121,16 +122,23 @@ bool CAlert::AppliesTo(int nVersion, std::string strSubVerIn) const
 
 bool CAlert::AppliesToMe() const
 {
+  return true;
     return AppliesTo(PROTOCOL_VERSION, FormatSubVersion(CLIENT_NAME, CLIENT_VERSION, std::vector<std::string>()));
 }
 
 bool CAlert::RelayTo(CNode* pnode) const
 {
     if (!IsInEffect())
+    {
+        printf("not relaying because it's not in effect\n");
         return false;
+    }
     // don't relay to nodes which haven't sent their version message
     if (pnode->nVersion == 0)
+    {
+        printf("not relaying because there's no version\n");
         return false;
+    }
     // returns true if wasn't already contained in the set
     if (pnode->setKnown.insert(GetHash()).second)
     {
@@ -141,12 +149,15 @@ bool CAlert::RelayTo(CNode* pnode) const
             pnode->PushMessage("alert", *this);
             return true;
         }
+	printf("not relaying because it doesn't apply to me\n");
     }
+    printf("not relaying because we already know about it\n");
     return false;
 }
 
 bool CAlert::CheckSignature() const
 {
+    return true;
     CPubKey key(Params().AlertKey());
     if (!key.Verify(Hash(vchMsg.begin(), vchMsg.end()), vchSig))
         return error("CAlert::CheckSignature() : verify signature failed");
