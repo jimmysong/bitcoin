@@ -48,6 +48,7 @@ class NetTest(BitcoinTestFramework):
         connect_nodes_bi(self.nodes, 0, 1)
         assert_equal(self.nodes[0].getnetworkinfo()['networkactive'], True)
         assert_equal(self.nodes[0].getnetworkinfo()['connections'], 2)
+        assert_equal(self.nodes[0].getconnectioncount(), 2)
 
         # test getaddednodeinfo
         assert_equal(self.nodes[0].getaddednodeinfo(), [])
